@@ -25,4 +25,6 @@ int adminLogin(void);
 void adminDashboard(void);
 void displayMenu(void);
 void addFoodItem(void);
+void searchFoodItem(void);
+void updateFoodItem(void);
 #endif

@@ -71,13 +71,13 @@ void adminDashboard(void)
                 displayMenu();
                 break;
             case 3:
-                printf("\nSearch Food Item selected.\n");
+                searchFoodItem();
                 break;
             case 4:
-                printf("\nUpdate Food Item selected.\n");
+                updateFoodItem();
                 break;
             case 5:
-                printf("\nDelete Food Item selected.\n");
+                 deleteFoodItem();
                 break;
             case 6:
                 printf("\nView Customer Orders selected.\n");
@@ -175,3 +175,206 @@ void addFoodItem(void)
     printf("\nFood item added successfully!\n");
     printf("Generated Food ID: %d\n",newFoodID);
 }
+    //search food item selected(case 3)
+void searchFoodItem(void)
+{
+    int choice;
+    int searchID;
+    int found = 0;
+    int i;
+    char searchName[50];
+
+    printf("\n========== SEARCH FOOD ITEM ==========\n");
+    printf("1. Search by Food ID\n");
+    printf("2. Search by Food Name\n");
+
+    printf("\nEnter your choice: ");
+    scanf("%d", &choice);
+
+    // Search by Food ID
+    if (choice == 1)
+    {
+        printf("\nEnter Food ID: ");
+        scanf("%d", &searchID);
+
+        for (i = 0; i < foodCount; i++)
+        {
+            if (food[i].foodID == searchID)
+            {
+                found = 1;
+
+                printf("\nFood Item Found!\n");
+                printf("Food ID: %d\n", food[i].foodID);
+                printf("Food Name: %s\n", food[i].foodName);
+                printf("Category ID: %d\n", food[i].categoryID);
+                printf("Price: Rs. %.2f\n", food[i].price);
+
+                break;
+            }
+        }
+    }
+
+    // Search by Food Name
+    else if (choice == 2)
+    {
+        printf("\nEnter Food Name: ");
+        scanf(" %49[^\n]", searchName);
+
+        for (i = 0; i < foodCount; i++)
+        {
+            if (compareStrings(food[i].foodName, searchName) == 1)
+            {
+                found = 1;
+
+                printf("\nFood Item Found!\n");
+                printf("Food ID: %d\n", food[i].foodID);
+                printf("Food Name: %s\n", food[i].foodName);
+                printf("Category ID: %d\n", food[i].categoryID);
+                printf("Price: Rs. %.2f\n", food[i].price);
+
+                break;
+            }
+        }
+    }
+
+    else
+    {
+        printf("\nInvalid choice!\n");
+        return;
+    }
+
+    // Check if food item was found
+    if (found == 0)
+    {
+        printf("\nFood Item Not Found!\n");
+    }
+}
+// Update food item(case 4)
+
+void updateFoodItem(void)
+{
+    int searchID;
+    int i;
+    int j;
+    int found = 0;
+    char newFoodName[50];
+    float newPrice;
+
+    printf("\n========== UPDATE FOOD ITEM ==========\n");
+
+    printf("Enter Food ID: ");
+    if (scanf("%d", &searchID) != 1)
+    {
+        printf("\nInvalid Food ID!\n");
+        return;
+    }
+
+    // Search food item
+    for (i = 0; i < foodCount; i++)
+    {
+        if (food[i].foodID == searchID)
+        {
+            found = 1;
+
+            printf("\nFood Item Found!\n");
+            printf("Food ID: %d\n", food[i].foodID);
+            printf("Food Name: %s\n", food[i].foodName);
+            printf("Current Price: Rs. %.2f\n", food[i].price);
+
+            // Enter new food name
+            printf("\nEnter New Food Name: ");
+            if (scanf(" %49[^\n]", newFoodName) != 1)
+            {
+                printf("\nInvalid Food Name!\n");
+                return;
+            }
+
+            // Enter new food price
+            printf("Enter New Food Price: Rs. ");
+            if (scanf("%f", &newPrice) != 1 || newPrice <= 0)
+            {
+                printf("\nInvalid Price! Update Cancelled.\n");
+                return;
+            }
+
+            // Update food name
+            for (j = 0; newFoodName[j] != '\0'; j++)
+            {
+                food[i].foodName[j] = newFoodName[j];
+            }
+
+            food[i].foodName[j] = '\0';
+
+            // Update food price
+            food[i].price = newPrice;
+
+            printf("\nFood Item Updated Successfully!\n");
+            printf("\nUpdated Food Details:\n");
+            printf("Food ID: %d\n", food[i].foodID);
+            printf("Food Name: %s\n", food[i].foodName);
+            printf("Category ID: %d\n", food[i].categoryID);
+            printf("New Price: Rs. %.2f\n", food[i].price);
+
+            break;
+        }
+    }
+
+    if (found == 0)
+    {
+        printf("\nFood Item Not Found!\n");
+    }
+}
+//case 5
+void deleteFoodItem(void)
+{
+    int searchID;
+    int i;
+    int j;
+    int found = 0;
+
+    printf("\n========== DELETE FOOD ITEM ==========\n");
+
+    printf("Enter Food ID to Delete: ");
+
+    if (scanf("%d", &searchID) != 1)
+    {
+        printf("\nInvalid Food ID!\n");
+        return;
+    }
+
+    // Search food item by ID
+    for (i = 0; i < foodCount; i++)
+    {
+        if (food[i].foodID == searchID)
+        {
+            found = 1;
+
+            // Display food item details
+            printf("\nFood Item Found!\n");
+            printf("Food ID: %d\n", food[i].foodID);
+            printf("Food Name: %s\n", food[i].foodName);
+            printf("Category ID: %d\n", food[i].categoryID);
+            printf("Price: Rs. %.2f\n", food[i].price);
+
+            // Shift remaining food items to the left
+            for (j = i; j < foodCount - 1; j++)
+            {
+                food[j] = food[j + 1];
+            }
+
+            // Decrease food count
+            foodCount--;
+
+            printf("\nFood Item Deleted Successfully!\n");
+
+            break;
+        }
+    }
+
+    // Check if food item was found
+    if (found == 0)
+    {
+        printf("\nFood Item Not Found!\n");
+    }
+}
+
