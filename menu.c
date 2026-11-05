@@ -13,7 +13,7 @@ void displayMenu()
         printf("%-10s %-25s %s\n","Food ID","Food Name","Price");
         for (int j= 0;j<foodCount;j++)
         {
-            if (food[j].categoryID == categories[i].categoryID)
+            if (food[j].categoryID==categories[i].categoryID)
             {
                 printf("%-10d %-25s Rs. %.2f\n",food[j].foodID,food[j].foodName,food[j].price);
             }

@@ -24,4 +24,5 @@ extern int foodCount;
 int adminLogin(void);
 void adminDashboard(void);
 void displayMenu(void);
+void addFoodItem(void);
 #endif
