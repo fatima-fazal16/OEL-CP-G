@@ -27,4 +27,5 @@ void displayMenu(void);
 void addFoodItem(void);
 void searchFoodItem(void);
 void updateFoodItem(void);
+void deleteFoodItem(void);
 #endif
