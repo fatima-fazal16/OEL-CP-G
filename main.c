@@ -57,6 +57,12 @@ Food food[MAX_FOOD]=
     {705,7,"Mint Margarita",400}
 };
     int foodCount=35;
+
+    //Global order storage
+    Order orders[MAX_ORDERS];
+    int orderCount=0;
+
+    
 int main(void)
 {
     int choice;
@@ -71,7 +77,7 @@ int main(void)
     if(choice==1)
     {
         printf("\nWelcome to Customer Portal!\n");
-        displayMenu();
+        customerDashboard();
     }
     else if(choice==2)
     {
