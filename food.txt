@@ -1,0 +1,35 @@
+101|1|Chicken Wings|650.00
+102|1|Chicken Nuggets|500.00
+103|1|French Fries|350.00
+104|1|Dynamite Prawns|850.00
+105|1|Cheese Balls|450.00
+201|2|Chicken Corn Soup|300.00
+202|2|Hot & Sour Soup|350.00
+203|2|Caesar Salad|650.00
+204|2|Russian Salad|500.00
+205|2|Fresh Garden Salad|350.00
+301|3|Zinger Burger|650.00
+302|3|Beef Burger|750.00
+303|3|Chicken Shawarma|400.00
+304|3|Club Sandwich|550.00
+305|3|Chicken Wrap|500.00
+401|4|Chicken Manchurian|950.00
+402|4|Chicken Chow Mein|850.00
+403|4|Chicken Fried Rice|750.00
+404|4|Beef Chilli Dry|1200.00
+405|4|Szechuan Chicken|1000.00
+501|5|Chicken Biryani|450.00
+502|5|Chicken Karahi|1400.00
+503|5|Beef Nihari|900.00
+504|5|Chicken Tikka|450.00
+505|5|Malai Boti|750.00
+601|6|Chicken Tikka Pizza|1200.00
+602|6|Fajita Pizza|1300.00
+603|6|Creamy Alfredo Pasta|850.00
+604|6|Arrabbiata Pasta|800.00
+605|6|Lasagna|1000.00
+701|7|Chocolate Lava Cake|550.00
+702|7|Brownie with Ice Cream|600.00
+703|7|Cheesecake|650.00
+704|7|Chocolate Milkshake|450.00
+705|7|Mint Margarita|400.00

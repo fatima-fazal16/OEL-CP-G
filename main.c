@@ -57,16 +57,58 @@ Food food[MAX_FOOD]=
     {705,7,"Mint Margarita",400}
 };
     int foodCount=35;
-
     //Global order storage
     Order orders[MAX_ORDERS];
     int orderCount=0;
-
-    
+void saveFoodData(void)
+{
+    FILE *fp;
+    int i;
+    fp=fopen("food.txt","w");
+    if(fp==NULL)
+    {
+        printf("\nUnable to save food data!\n");
+        return;
+    }
+    for (i=0;i<foodCount;i++)
+    {
+        fprintf(fp,"%d|%d|%s|%.2f\n",food[i].foodID,food[i].categoryID,food[i].foodName,food[i].price);
+    }
+    fclose(fp);
+}
+void loadFoodData(void)
+{
+    FILE *fp;
+    int i=0;
+    fp=fopen("food.txt","r");
+    if(fp==NULL)
+    {
+        saveFoodData();
+        return;
+    }
+    while (i<MAX_FOOD)
+    {
+        if (fscanf(fp,"%d|%d|%49[^|]|%f",&food[i].foodID,&food[i].categoryID,food[i].foodName,&food[i].price)!=4)
+        {
+            break;
+        }
+        i++;
+    }
+    fclose(fp);
+    if (i>0)
+    {
+        foodCount = i;
+    }
+    else
+    {
+        saveFoodData();
+    }
+}   
 int main(void)
 {
     int choice;
     int result;
+    loadFoodData();
     printf("\n================================\n");
     printf("RESTAURANT MANAGEMENT SYSTEM\n");
     printf("================================\n");

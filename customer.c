@@ -3,7 +3,6 @@
 #include<ctype.h>
 #include "common.h"
 
-
 // Function 1: Take Customer Details
 static void takeCustomerDetails(Order *newOrder)
 {

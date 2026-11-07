@@ -58,4 +58,6 @@ void searchFoodItem(void);
 void updateFoodItem(void);
 void deleteFoodItem(void);
 void customerDashboard(void);
+void loadFoodData(void);
+void saveFoodData(void);
 #endif

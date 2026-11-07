@@ -1,8 +1,11 @@
 #include<stdio.h>
 #include "common.h" 
-int compareStrings(char str1[],char str2[])
+
+int compareStrings(char str1[],char str2[]) //same as strcmp in string.h
 {
+
     int i=0;
+
     while(str1[i]!='\0'&&str2[i]!='\0') 
     {
         if(str1[i]!=str2[i])
@@ -11,24 +14,30 @@ int compareStrings(char str1[],char str2[])
         }
         i++;
     }
+
     if(str1[i]=='\0'&&str2[i]=='\0')
     {
         return 1;
     }
+
     return 0;
 }
+
 int adminLogin(void)
 {
+
     char adminID[20];
     char password[20];
     int attempts=3;
     printf("\n===== ADMIN LOGIN =====\n");
+
     while(attempts>0)
     {
         printf("Enter Admin ID: ");
         scanf("%19s",adminID); //AD001
         printf("Enter Password: ");
         scanf("%19s",password); //admin123
+
         if(compareStrings(adminID,"AD001")==1&&compareStrings(password,"admin123")==1)
         {
             printf("\nLogin Successful!\n");
@@ -41,12 +50,14 @@ int adminLogin(void)
             printf("Remaining Attempts: %d\n",attempts);
         }
     }
+
     printf("\nAccess Denied!\n");
     return 0;
     }
     
 void adminDashboard(void)
 {
+
     int choice;
     do
     {
@@ -56,12 +67,13 @@ void adminDashboard(void)
         printf("3. Search Food Item\n");
         printf("4. Update Food Item\n");
         printf("5. Delete Food Item\n");
-        printf("6. View Customer Orders\n");
+      /*  printf("6. View Customer Orders\n");
         printf("7. Assign Orders to Waiters\n");
-        printf("8. View Sales Report\n");
-        printf("9. Logout\n");
+        printf("8. View Sales Report\n");*/
+        printf("6. Logout\n");
         printf("\nEnter your choice: ");
         scanf("%d",&choice);
+
         switch(choice)
         {
             case 1:
@@ -79,7 +91,7 @@ void adminDashboard(void)
             case 5:
                 deleteFoodItem();
                 break;
-            case 6:
+        /*    case 6:
                 printf("\nView Customer Orders selected.\n");
                 break;
             case 7:
@@ -87,17 +99,19 @@ void adminDashboard(void)
                 break;
             case 8:
                 printf("\nView Sales Report selected.\n");
-                break;
-            case 9:
+                break;*/
+            case 6:
                 printf("\nLogging out...\n");
                 break;
             default:
                 printf("\nInvalid choice! Try again.\n");
         }
-    } while(choice!=9);
+    } while(choice!=6);
 }
+// case 1
 void addFoodItem(void)
 {
+
     int categoryID;
     int i;
     int maxItemNumber=0;//initially, we assume that no item has been found in the selected category
@@ -118,6 +132,7 @@ void addFoodItem(void)
     }
     // Ask admin to select category
    printf("\nEnter Category ID: ");
+
     if(scanf("%d",&categoryID)!=1)
     {
         printf("Invalid category input!\n");
@@ -130,7 +145,7 @@ void addFoodItem(void)
         return;
     }
     // Find the highest existing item number in this category
-    for (i=0;i<foodCount;i++)
+    for(i=0;i<foodCount;i++)
     {
         if (food[i].categoryID==categoryID)
         {
@@ -149,14 +164,14 @@ void addFoodItem(void)
     newFoodID=categoryID*100+maxItemNumber+1;
     // Ask for food name
     printf("Enter Food Name: ");
-    if (scanf(" %49[^\n]",newFoodName)!=1)
+    if(scanf(" %49[^\n]",newFoodName)!=1)
     {
         printf("Invalid food name!\n");
         return;
     }
     // Ask for food price
     printf("Enter Food Price: Rs. ");
-    if (scanf("%f",&newPrice)!=1||newPrice<=0)
+    if(scanf("%f",&newPrice)!=1||newPrice<=0)
     {
         printf("Invalid price!\n");
         return;
@@ -172,12 +187,16 @@ void addFoodItem(void)
     food[foodCount].price=newPrice;
     // Increase food count
     foodCount++;
+    saveFoodData(); //file write "w"
     printf("\nFood item added successfully!\n");
     printf("Generated Food ID: %d\n",newFoodID);
+
 }
-    //search food item selected(case 3)
+   
+//search food item selected(case 3)
 void searchFoodItem(void)
 {
+
     int choice;
     int searchID;
     int found=0;
@@ -189,7 +208,7 @@ void searchFoodItem(void)
     printf("\nEnter your choice: ");
     scanf("%d",&choice);
     // Search by Food ID
-    if (choice==1)
+    if(choice==1)
     {
         printf("\nEnter Food ID: ");
         scanf("%d",&searchID);
@@ -208,7 +227,7 @@ void searchFoodItem(void)
         }
     }
     // Search by Food Name
-    else if (choice==2)
+    else if(choice==2)
     {
         printf("\nEnter Food Name: ");
         scanf(" %49[^\n]", searchName);
@@ -232,31 +251,33 @@ void searchFoodItem(void)
         return;
     }
     // Check if food item was found
-    if (found==0)
+    if(found==0)
     {
         printf("\nFood Item Not Found!\n");
     }
 }
+
 // Update food item(case 4)
 void updateFoodItem(void)
 {
+
     int searchID;
     int i;
     int j;
-    int found = 0;
+    int found=0;
     char newFoodName[50];
     float newPrice;
     printf("\n========== UPDATE FOOD ITEM ==========\n");
     printf("Enter Food ID: ");
-    if (scanf("%d",&searchID)!=1)
+    if(scanf("%d",&searchID)!=1)
     {
         printf("\nInvalid Food ID!\n");
         return;
     }
     // Search food item
-    for (i=0;i<foodCount;i++)
+    for(i=0;i<foodCount;i++)
     {
-        if (food[i].foodID==searchID)
+        if(food[i].foodID==searchID)
         {
             found=1;
             printf("\nFood Item Found!\n");
@@ -265,7 +286,7 @@ void updateFoodItem(void)
             printf("Current Price: Rs. %.2f\n",food[i].price);
             // Enter new food name
             printf("\nEnter New Food Name: ");
-            if (scanf("%49[^\n]",&newFoodName)!=1)
+            if (scanf(" %49[^\n]", newFoodName)!=1)
             {
                 printf("\nInvalid Food Name!\n");
                 return;
@@ -278,14 +299,14 @@ void updateFoodItem(void)
                 return;
             }
             // Update food name
-            for (j=0;newFoodName[j]!='\0';j++)
+            for(j=0;newFoodName[j]!='\0';j++)
             {
                 food[i].foodName[j]=newFoodName[j];
             }
             food[i].foodName[j] = '\0';
             // Update food price
             food[i].price=newPrice;
-
+            saveFoodData();
             printf("\nFood Item Updated Successfully!\n");
             printf("\nUpdated Food Details:\n");
             printf("Food ID: %d\n",food[i].foodID);
@@ -300,9 +321,11 @@ void updateFoodItem(void)
         printf("\nFood Item Not Found!\n");
     }
 }
+
 //case 5
 void deleteFoodItem(void)
 {
+
     int searchID;
     int i;
     int j;
@@ -315,9 +338,9 @@ void deleteFoodItem(void)
         return;
     }
     // Search food item by ID
-    for (i=0;i<foodCount;i++)
+    for(i=0;i<foodCount;i++)
     {
-        if (food[i].foodID==searchID)
+        if(food[i].foodID==searchID)
         {
             found=1;
             // Display food item details
@@ -333,6 +356,7 @@ void deleteFoodItem(void)
             }
             // Decrease food count
             foodCount--;
+            saveFoodData();
             printf("\nFood Item Deleted Successfully!\n");
             break;
         }
