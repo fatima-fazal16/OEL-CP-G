@@ -1,7 +1,111 @@
 #include <stdio.h>
-#include <string.h>
-#include<ctype.h>
 #include "common.h"
+
+
+
+// Save a confirmed order into orders.txt
+static int saveOrderData(const Order *newOrder)
+{
+    FILE *fp;
+
+    fp = fopen("orders.txt", "a");
+
+    if(fp == NULL)
+    {
+        printf("\nUnable to save order data!\n");
+        return 0;
+    }
+
+    fprintf(fp, "%d|%s|%d|%.2f|%.2f|%.2f|%.2f|%s\n",
+            newOrder->orderID,
+            newOrder->customerName,
+            newOrder->itemCount,
+            newOrder->totalAmount,
+            newOrder->discountPercent,
+            newOrder->discountAmount,
+            newOrder->finalAmount,
+            newOrder->orderStatus);
+
+    for(int i = 0; i < newOrder->itemCount; i++)
+    {
+        fprintf(fp, "%d|%d|%.2f\n",
+                newOrder->items[i].foodID,
+                newOrder->items[i].quantity,
+                newOrder->items[i].price);
+    }
+
+    fclose(fp);
+    return 1;
+}
+
+
+// Load previously saved orders from orders.txt
+static void loadOrderData(void)
+{
+    FILE *fp;
+    Order temp = {0};
+
+    fp = fopen("orders.txt", "r");
+
+    if(fp == NULL)
+    {
+        return;
+    }
+
+    while(orderCount < MAX_ORDERS)
+    {
+        temp = (Order){0};
+
+        if(fscanf(fp, "%d|%49[^|]|%d|%f|%f|%f|%f|%19s\n",
+                  &temp.orderID,
+                  temp.customerName,
+                  &temp.itemCount,
+                  &temp.totalAmount,
+                  &temp.discountPercent,
+                  &temp.discountAmount,
+                  &temp.finalAmount,
+                  temp.orderStatus) != 8)
+        {
+            break;
+        }
+
+        if(temp.itemCount < 0 || temp.itemCount > MAX_ORDER_ITEMS)
+        {
+            break;
+        }
+
+        int valid = 1;
+
+        for(int i = 0; i < temp.itemCount; i++)
+        {
+            if(fscanf(fp, "%d|%d|%f\n",
+                      &temp.items[i].foodID,
+                      &temp.items[i].quantity,
+                      &temp.items[i].price) != 3)
+            {
+                valid = 0;
+                break;
+            }
+        }
+
+        if(!valid)
+        {
+            break;
+        }
+
+        orders[orderCount] = temp;
+        orderCount++;
+    }
+
+    fclose(fp);
+}
+
+
+
+
+
+
+
 
 // Function 1: Take Customer Details
 static void takeCustomerDetails(Order *newOrder)
@@ -439,12 +543,25 @@ static void confirmOrder(Order *newOrder)
 {
     newOrder->orderID = 1001 + orderCount;
 
-    strcpy(newOrder->orderStatus, "Pending");
+   int i;
+char status[] = "Pending";
 
-    // Save order in global order array
-    orders[orderCount] = *newOrder;
+for(i = 0; status[i] != '\0'; i++)
+{
+    newOrder->orderStatus[i] = status[i];
+}
+newOrder->orderStatus[i] = '\0';
 
-    orderCount++;
+  // Save order in global order array
+orders[orderCount] = *newOrder;
+
+// Save order in file
+if(saveOrderData(&orders[orderCount]))
+{
+    printf("\nOrder saved successfully!\n");
+}
+
+orderCount++;
 
     printf("\n========== ORDER CONFIRMATION ==========\n");
 
@@ -603,22 +720,27 @@ static void trackOrderStatus(void)
 static int compareNamesIgnoreCase(const char name1[], const char name2[])
 {
     int i = 0;
+    char ch1, ch2;
 
     while(name1[i] != '\0' && name2[i] != '\0')
     {
-        if(tolower((unsigned char)name1[i]) !=
-           tolower((unsigned char)name2[i]))
-        {
+        ch1 = name1[i];
+        ch2 = name2[i];
+
+        if(ch1 >= 'A' && ch1 <= 'Z')
+            ch1 = ch1 + 32;
+
+        if(ch2 >= 'A' && ch2 <= 'Z')
+            ch2 = ch2 + 32;
+
+        if(ch1 != ch2)
             return 0;
-        }
 
         i++;
     }
 
     return name1[i] == '\0' && name2[i] == '\0';
 }
-
-
 // Function 14: View Order History
 static void viewOrderHistory(void)
 {
@@ -651,6 +773,13 @@ static void viewOrderHistory(void)
 void customerDashboard(void)
 {
     int choice;
+    static int loaded = 0;
+
+    if(!loaded)
+    {
+        loadOrderData();
+        loaded = 1;
+    }
 
     do
     {
