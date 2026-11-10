@@ -67,10 +67,9 @@ void adminDashboard(void)
         printf("3. Search Food Item\n");
         printf("4. Update Food Item\n");
         printf("5. Delete Food Item\n");
-      /*  printf("6. View Customer Orders\n");
-        printf("7. Assign Orders to Waiters\n");
-        printf("8. View Sales Report\n");*/
-        printf("6. Logout\n");
+        printf("6. Display All Orders\n");
+        printf("7. Update Order Status\n");
+        printf("8. Logout\n");
         printf("\nEnter your choice: ");
         scanf("%d",&choice);
 
@@ -91,22 +90,19 @@ void adminDashboard(void)
             case 5:
                 deleteFoodItem();
                 break;
-        /*    case 6:
-                printf("\nView Customer Orders selected.\n");
+            case 6:
+                displayAllOrders();
                 break;
             case 7:
-                printf("\nAssign Orders to Waiters selected.\n");
+                updateOrderStatus();
                 break;
             case 8:
-                printf("\nView Sales Report selected.\n");
-                break;*/
-            case 6:
                 printf("\nLogging out...\n");
                 break;
             default:
                 printf("\nInvalid choice! Try again.\n");
         }
-    } while(choice!=6);
+    } while(choice!=8);
 }
 // case 1
 void addFoodItem(void)
@@ -203,8 +199,7 @@ void searchFoodItem(void)
     int i;
     char searchName[50];
     printf("\n========== SEARCH FOOD ITEM ==========\n");
-    printf("1. Search by Food ID\n");
-    printf("2. Search by Food Name\n");
+    printf("1. Search by Food ID\n");;
     printf("\nEnter your choice: ");
     scanf("%d",&choice);
     // Search by Food ID
@@ -215,25 +210,6 @@ void searchFoodItem(void)
         for (i=0; i<foodCount;i++)
         {
             if (food[i].foodID==searchID)
-            {
-                found=1;
-                printf("\nFood Item Found!\n");
-                printf("Food ID: %d\n", food[i].foodID);
-                printf("Food Name: %s\n", food[i].foodName);
-                printf("Category ID: %d\n", food[i].categoryID);
-                printf("Price: Rs. %.2f\n", food[i].price);
-                break;
-            }
-        }
-    }
-    // Search by Food Name
-    else if(choice==2)
-    {
-        printf("\nEnter Food Name: ");
-        scanf(" %49[^\n]", searchName);
-        for (i=0;i<foodCount;i++)
-        {
-            if (compareStrings(food[i].foodName,searchName)==1)
             {
                 found=1;
                 printf("\nFood Item Found!\n");
@@ -329,7 +305,7 @@ void deleteFoodItem(void)
     int searchID;
     int i;
     int j;
-    int found = 0;
+    int found=0;
     printf("\n========== DELETE FOOD ITEM ==========\n");
     printf("Enter Food ID to Delete: ");
     if(scanf("%d",&searchID)!=1)
@@ -366,4 +342,98 @@ void deleteFoodItem(void)
     {
         printf("\nFood Item Not Found!\n");
     }
+}
+
+void updateOrderStatus(void)
+{
+    int searchID,found=0,choice;
+    char *status;
+    loadOrderData();
+    printf("\n========== UPDATE ORDER STATUS ==========\n");
+    printf("Enter Order ID: ");
+    scanf("%d",&searchID);
+
+    for(int i=0;i<orderCount;i++)
+    {
+        if(orders[i].orderID==searchID)
+        {
+            found=1;
+            printf("\nCustomer Name: %s\n", orders[i].customerName);
+            printf("Current Status: %s\n", orders[i].orderStatus);
+            printf("\n1. Pending\n");
+            printf("2. Confirmed\n");
+            printf("3. Preparing\n");
+            printf("4. Completed\n");
+            printf("5. Cancelled\n");
+            printf("\nEnter new status: ");
+            scanf("%d",&choice);
+
+            switch(choice)
+            {
+                case 1:
+                    printf("\nOrder is Pending!\n");
+                    status="Pending";
+                    break;
+                case 2:
+                    printf("\nOrder is Confirmed!\n");
+                    status="Confirmed";
+                    break;
+                case 3:
+                    printf("\nOrder is Preparing!\n");
+                    status="Preparing";
+                    break;
+                case 4:
+                    printf("\nOrder is Completed!\n");
+                    status="Completed";
+                    break;
+                case 5:
+                    printf("\nOrder is Cancelled!\n");
+                    status="Cancelled";
+                    break;
+                default:
+                    printf("\nInvalid choice!\n");
+                    return;
+            }
+            int j;
+            for(j=0;status[j]!='\0';j++)
+            {
+                orders[i].orderStatus[j] = status[j];
+            }
+            orders[i].orderStatus[j] = '\0';
+            if(saveAllOrderData())
+                printf("\nStatus saved successfully!\n");
+            else
+                printf("\nUnable to save status!\n");
+            break;
+        }
+    }
+    if(found==0)
+        printf("\nOrder ID not found!\n");
+}
+void displayAllOrders(void)
+{
+    loadOrderData();
+    printf("\n========== ALL CUSTOMER ORDERS ==========\n");
+    if(orderCount==0)
+    {
+        printf("\nNo orders found!\n");
+        return;
+    }
+    for(int i=0;i<orderCount;i++)
+    {
+        printf("\n-----------------------------\n");
+        printf("Order ID: %d\n", orders[i].orderID);
+        printf("Customer Name: %s\n", orders[i].customerName);
+        printf("Order Status: %s\n", orders[i].orderStatus);
+        printf("Total Amount: %.2f\n", orders[i].totalAmount);
+        printf("Final Amount: %.2f\n", orders[i].finalAmount);
+        printf("\nOrdered Items:\n");
+        for(int j=0;j<orders[i].itemCount;j++)
+        {
+            printf("Food ID: %d\n",orders[i].items[j].foodID);
+            printf("Quantity: %d\n",orders[i].items[j].quantity);
+            printf("Price: %.2f\n",orders[i].items[j].price);
+        }
+    }
+    printf("\n-----------------------------\n");
 }

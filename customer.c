@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include "common.h"
-
-
-
 // Save a confirmed order into orders.txt
 static int saveOrderData(const Order *newOrder)
 {
     FILE *fp;
-
     fp = fopen("orders.txt", "a");
 
     if(fp == NULL)
@@ -15,7 +11,6 @@ static int saveOrderData(const Order *newOrder)
         printf("\nUnable to save order data!\n");
         return 0;
     }
-
     fprintf(fp, "%d|%s|%d|%.2f|%.2f|%.2f|%.2f|%s\n",
             newOrder->orderID,
             newOrder->customerName,
@@ -26,33 +21,53 @@ static int saveOrderData(const Order *newOrder)
             newOrder->finalAmount,
             newOrder->orderStatus);
 
-    for(int i = 0; i < newOrder->itemCount; i++)
+    for(int i=0;i<newOrder->itemCount;i++)
     {
-        fprintf(fp, "%d|%d|%.2f\n",
-                newOrder->items[i].foodID,
-                newOrder->items[i].quantity,
-                newOrder->items[i].price);
+        fprintf(fp, "%d|%d|%.2f\n",newOrder->items[i].foodID,newOrder->items[i].quantity,newOrder->items[i].price);
     }
-
     fclose(fp);
     return 1;
 }
-
-
-// Load previously saved orders from orders.txt
-static void loadOrderData(void)
+int saveAllOrderData(void)
 {
     FILE *fp;
-    Order temp = {0};
-
+    fp=fopen("orders.txt", "w");
+    if(fp==NULL)
+    {
+        printf("\nUnable to update order data!\n");
+        return 0;
+    }
+    for(int i=0;i<orderCount;i++)
+    {
+        fprintf(fp,"%d|%s|%d|%.2f|%.2f|%.2f|%.2f|%s\n",
+                orders[i].orderID,
+                orders[i].customerName,
+                orders[i].itemCount,
+                orders[i].totalAmount,
+                orders[i].discountPercent,
+                orders[i].discountAmount,
+                orders[i].finalAmount,
+                orders[i].orderStatus);
+        for(int j=0;j<orders[i].itemCount;j++)
+        {
+            fprintf(fp,"%d|%d|%.2f\n",orders[i].items[j].foodID,orders[i].items[j].quantity,orders[i].items[j].price);
+        }
+    }
+    fclose(fp);
+    return 1;
+}
+// Load previously saved orders from orders.txt
+void loadOrderData(void)
+{
+    FILE *fp;
+    Order temp={0};
     fp = fopen("orders.txt", "r");
-
-    if(fp == NULL)
+    if(fp==NULL)
     {
         return;
     }
-
-    while(orderCount < MAX_ORDERS)
+    orderCount=0;
+    while(orderCount<MAX_ORDERS)
     {
         temp = (Order){0};
 
@@ -666,161 +681,122 @@ static void displaySavedOrderDetails(const Order *savedOrder)
                 break;
             }
         }
-
-        if(found == 0)
+        if(found==0)
         {
             printf("%-10d %-25s %-10d Rs. %.2f\n",
-                   savedOrder->items[i].foodID,
-                   "Item unavailable",
-                   savedOrder->items[i].quantity,
-                   savedOrder->items[i].price *
-                   savedOrder->items[i].quantity);
+                   savedOrder->items[i].foodID,"Item unavailable",savedOrder->items[i].quantity,savedOrder->items[i].price *savedOrder->items[i].quantity);
         }
     }
-
     printf("-----------------------------------\n");
     printf("Subtotal: Rs. %.2f\n", savedOrder->totalAmount);
     printf("Discount: %.0f%%\n", savedOrder->discountPercent);
     printf("Discount Amount: Rs. %.2f\n", savedOrder->discountAmount);
     printf("Final Amount: Rs. %.2f\n", savedOrder->finalAmount);
 }
-
-
 // Function 13: Track Order Status
 static void trackOrderStatus(void)
 {
+    loadOrderData();
     int searchID;
-    int found = 0;
-
+    int found=0;
     printf("\n----- TRACK ORDER STATUS -----\n");
-
     printf("Enter your Order ID: ");
-    scanf("%d", &searchID);
-
-    for(int i = 0; i < orderCount; i++)
+    scanf("%d",&searchID);
+    for(int i=0;i<orderCount;i++)
     {
-        if(orders[i].orderID == searchID)
+        if(orders[i].orderID==searchID)
         {
-            found = 1;
-
+            found=1;
             displaySavedOrderDetails(&orders[i]);
-
             break;
         }
     }
-
-    if(found == 0)
+    if(found==0)
     {
         printf("\nOrder ID not found!\n");
     }
 }
-
-
 //Function for comparing the names
 static int compareNamesIgnoreCase(const char name1[], const char name2[])
 {
-    int i = 0;
-    char ch1, ch2;
-
-    while(name1[i] != '\0' && name2[i] != '\0')
+    int i=0;
+    char ch1,ch2;
+    while(name1[i]!='\0'&&name2[i]!='\0')
     {
-        ch1 = name1[i];
-        ch2 = name2[i];
-
-        if(ch1 >= 'A' && ch1 <= 'Z')
-            ch1 = ch1 + 32;
-
-        if(ch2 >= 'A' && ch2 <= 'Z')
-            ch2 = ch2 + 32;
-
-        if(ch1 != ch2)
+        ch1=name1[i];
+        ch2=name2[i];
+        if(ch1>='A'&&ch1<='Z')
+            ch1=ch1+32;
+        if(ch2>='A'&&ch2<='Z')
+            ch2=ch2+32;
+        if(ch1!=ch2)
             return 0;
-
         i++;
     }
-
-    return name1[i] == '\0' && name2[i] == '\0';
+    return name1[i]=='\0'&&name2[i]=='\0';
 }
 // Function 14: View Order History
 static void viewOrderHistory(void)
 {
     char customerName[50];
-    int found = 0;
-
+    int found=0;
     printf("\n----- CUSTOMER ORDER HISTORY -----\n");
-
     printf("Enter your customer name: ");
     scanf(" %49[^\n]", customerName);
-
-    for(int i = 0; i < orderCount; i++)
+    for(int i=0;i<orderCount;i++)
     {
        if(compareNamesIgnoreCase(orders[i].customerName, customerName))
         {
-            found = 1;
-
+            found=1;
             displaySavedOrderDetails(&orders[i]);
         }
     }
-
-    if(found == 0)
+    if(found==0)
     {
         printf("\nNo order history found for this name!\n");
     }
 }
-
-
 // Function 15: Customer Dashboard
 void customerDashboard(void)
 {
     int choice;
-    static int loaded = 0;
-
+    static int loaded=0;
     if(!loaded)
     {
         loadOrderData();
-        loaded = 1;
+        loaded=1;
     }
-
     do
     {
         printf("\n====================================\n");
         printf("          CUSTOMER PORTAL\n");
         printf("====================================\n");
-
         printf("1. View Food Menu\n");
         printf("2. Place New Order\n");
         printf("3. Track Order Status\n");
         printf("4. View Order History\n");
         printf("5. Exit\n");
-
         printf("\nEnter your choice: ");
-        scanf("%d", &choice);
-
+        scanf("%d",&choice);
         switch(choice)
         {
             case 1:
                 displayMenu();
                 break;
-
             case 2:
                 placeOrder();
                 break;
-
             case 3:
                 trackOrderStatus();
                 break;
-
             case 4:
                 viewOrderHistory();
                 break;
-
             case 5:
                 printf("\nThank you for visiting our restaurant!\n");
                 break;
-
             default:
                 printf("\nInvalid choice! Please try again.\n");
         }
-
-    } while(choice != 5);
+    } while(choice!=5);
 }

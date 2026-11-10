@@ -60,4 +60,8 @@ void deleteFoodItem(void);
 void customerDashboard(void);
 void loadFoodData(void);
 void saveFoodData(void);
+void loadOrderData(void);
+int saveAllOrderData(void);
+void displayAllOrders(void);
+void updateOrderStatus(void);
 #endif
