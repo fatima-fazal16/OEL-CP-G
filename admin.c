@@ -91,11 +91,8 @@ void adminDashboard(void)
                 deleteFoodItem();
                 break;
             case 6:
-<<<<<<< Updated upstream
                 displayAllOrders();
-=======
                  viewCustomerOrders();
->>>>>>> Stashed changes
                 break;
             case 7:
                 updateOrderStatus();
