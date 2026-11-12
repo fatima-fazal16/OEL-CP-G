@@ -91,7 +91,11 @@ void adminDashboard(void)
                 deleteFoodItem();
                 break;
             case 6:
+<<<<<<< Updated upstream
                 displayAllOrders();
+=======
+                 viewCustomerOrders();
+>>>>>>> Stashed changes
                 break;
             case 7:
                 updateOrderStatus();
@@ -344,6 +348,7 @@ void deleteFoodItem(void)
     }
 }
 
+<<<<<<< Updated upstream
 void updateOrderStatus(void)
 {
     int searchID,found=0,choice;
@@ -437,3 +442,7 @@ void displayAllOrders(void)
     }
     printf("\n-----------------------------\n");
 }
+=======
+
+
+>>>>>>> Stashed changes
