@@ -22,7 +22,7 @@ int compareStrings(char str1[],char str2[]) //same as strcmp in string.h
 
     return 0;
 }
-
+//FUNCTION 1 admin login 
 int adminLogin(void)
 {
 
@@ -55,6 +55,7 @@ int adminLogin(void)
     return 0;
     }
     
+//FUNCTION 2 admin dashboard    
 void adminDashboard(void)
 {
 
@@ -105,7 +106,7 @@ void adminDashboard(void)
         }
     } while(choice!=8);
 }
-// case 1
+//FUNCTION 3 CASE 1 ADD FOOD ITEM
 void addFoodItem(void)
 {
 
@@ -190,7 +191,7 @@ void addFoodItem(void)
 
 }
    
-//search food item selected(case 3)
+//FUNCTION 5 CASE 3 search food item selected
 void searchFoodItem(void)
 {
 
@@ -234,7 +235,7 @@ void searchFoodItem(void)
     }
 }
 
-// Update food item(case 4)
+// FUNCTION 6 CASE 4 Update food item
 void updateFoodItem(void)
 {
 
@@ -299,7 +300,7 @@ void updateFoodItem(void)
     }
 }
 
-//case 5
+//FUNCTION 7 CASE 5 DELETE FOOD ITEM
 void deleteFoodItem(void)
 {
 
@@ -345,7 +346,7 @@ void deleteFoodItem(void)
     }
 }
 
-<<<<<<< Updated upstream
+//FUNTION 8 CASE 6 update order status
 void updateOrderStatus(void)
 {
     int searchID,found=0,choice;
@@ -412,6 +413,7 @@ void updateOrderStatus(void)
     if(found==0)
         printf("\nOrder ID not found!\n");
 }
+//FUNCTION 9 CASE 7 display all orders
 void displayAllOrders(void)
 {
     loadOrderData();
@@ -439,7 +441,3 @@ void displayAllOrders(void)
     }
     printf("\n-----------------------------\n");
 }
-=======
-
-
->>>>>>> Stashed changes

@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include "common.h" 
-void displayMenu()
+// FUNCTION 4 CASE 2 display menu 
+void displayMenu() 
 {
     printf("\n");
     printf("============================================\n");

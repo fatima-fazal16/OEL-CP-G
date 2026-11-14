@@ -4,9 +4,9 @@
 static int saveOrderData(const Order *newOrder)
 {
     FILE *fp;
-    fp = fopen("orders.txt", "a");
+    fp=fopen("orders.txt", "a");
 
-    if(fp == NULL)
+    if(fp==NULL)
     {
         printf("\nUnable to save order data!\n");
         return 0;
@@ -89,16 +89,16 @@ void loadOrderData(void)
             break;
         }
 
-        int valid = 1;
+        int valid=1;
 
-        for(int i = 0; i < temp.itemCount; i++)
+        for(int i=0;i<temp.itemCount;i++)
         {
             if(fscanf(fp, "%d|%d|%f\n",
                       &temp.items[i].foodID,
                       &temp.items[i].quantity,
                       &temp.items[i].price) != 3)
             {
-                valid = 0;
+                valid=0;
                 break;
             }
         }
@@ -108,20 +108,12 @@ void loadOrderData(void)
             break;
         }
 
-        orders[orderCount] = temp;
+        orders[orderCount]=temp;
         orderCount++;
     }
 
     fclose(fp);
 }
-
-
-
-
-
-
-
-
 // Function 1: Take Customer Details
 static void takeCustomerDetails(Order *newOrder)
 {
@@ -132,8 +124,6 @@ static void takeCustomerDetails(Order *newOrder)
 
     printf("\nWelcome, %s!\n", newOrder->customerName);
 }
-
-
 // Function 2: Calculate Discount
 static void calculateDiscount(Order *newOrder)
 {
@@ -457,13 +447,11 @@ static void displayOrderSummary(Order *newOrder)
     printf("\n========== ORDER SUMMARY ==========\n");
 
     printf("Customer Name: %s\n", newOrder->customerName);
-
     printf("\n%-10s %-25s %-10s %-10s\n",
            "Food ID", "Food Name", "Quantity", "Price");
-
-    for(int i = 0; i < newOrder->itemCount; i++)
+    for(int i=0;i<newOrder->itemCount;i++)
     {
-        for(int j = 0; j < foodCount; j++)
+        for(int j=0;j<foodCount;j++)
         {
             if(newOrder->items[i].foodID == food[j].foodID)
             {
@@ -478,7 +466,6 @@ static void displayOrderSummary(Order *newOrder)
             }
         }
     }
-
     printf("-----------------------------------\n");
     printf("Subtotal: Rs. %.2f\n", newOrder->totalAmount);
     printf("Discount: %.0f%%\n", newOrder->discountPercent);
@@ -486,32 +473,28 @@ static void displayOrderSummary(Order *newOrder)
     printf("-----------------------------------\n");
     printf("Final Amount: Rs. %.2f\n", newOrder->finalAmount);
 }
-
-
 // Function 9: Update Order
 static void updateOrder(Order *newOrder)
 {
     int updateFoodID;
     int newQuantity;
     int itemFound = 0;
-
     printf("\nEnter Food ID to update or remove: ");
     scanf("%d", &updateFoodID);
-
-    for(int i = 0; i < newOrder->itemCount; i++)
+    for(int i=0;i<newOrder->itemCount;i++)
     {
-        if(newOrder->items[i].foodID == updateFoodID)
+        if(newOrder->items[i].foodID==updateFoodID)
         {
-            itemFound = 1;
+            itemFound=1;
 
             printf("Enter new quantity (0 to remove): ");
             scanf("%d", &newQuantity);
 
-            if(newQuantity < 0)
+            if(newQuantity<0)
             {
                 printf("Invalid quantity!\n");
             }
-            else if(newQuantity == 0)
+            else if(newQuantity==0)
             {
                 for(int j = i; j < newOrder->itemCount - 1; j++)
                 {
@@ -524,52 +507,43 @@ static void updateOrder(Order *newOrder)
             }
             else
             {
-                newOrder->items[i].quantity = newQuantity;
-
+                newOrder->items[i].quantity=newQuantity;
                 printf("Quantity updated successfully!\n");
             }
-
             break;
         }
     }
-
-    if(itemFound == 0)
+    if(itemFound==0)
     {
         printf("Food ID not found in your order!\n");
     }
-
     // Recalculate subtotal
-    newOrder->totalAmount = 0;
+    newOrder->totalAmount=0;
 
-    for(int i = 0; i < newOrder->itemCount; i++)
+    for(int i=0;i<newOrder->itemCount;i++)
     {
-        newOrder->totalAmount +=
-            newOrder->items[i].price *
+        newOrder->totalAmount+=
+            newOrder->items[i].price*
             newOrder->items[i].quantity;
     }
-
     // Recalculate discount
     calculateDiscount(newOrder);
 }
-
-
 // Function 10: Confirm Order
 static void confirmOrder(Order *newOrder)
 {
-    newOrder->orderID = 1001 + orderCount;
+    newOrder->orderID=1001+orderCount;
 
    int i;
-char status[] = "Pending";
-
-for(i = 0; status[i] != '\0'; i++)
+char status[]="Pending";
+for(i=0;status[i]!='\0';i++)
 {
-    newOrder->orderStatus[i] = status[i];
+    newOrder->orderStatus[i]=status[i];
 }
-newOrder->orderStatus[i] = '\0';
+newOrder->orderStatus[i]='\0';
 
   // Save order in global order array
-orders[orderCount] = *newOrder;
-
+orders[orderCount]=*newOrder;
 // Save order in file
 if(saveOrderData(&orders[orderCount]))
 {
@@ -589,30 +563,23 @@ orderCount++;
 
     printf("\nYour order has been placed successfully!\n");
 }
-
-
 // Function 11: Place New Order
 static void placeOrder(void)
 {
     Order newOrder = {0};
     int choice;
-
-    if(orderCount >= MAX_ORDERS)
+    if(orderCount>=MAX_ORDERS)
     {
         printf("\nOrder limit reached!\n");
         return;
     }
-
     takeCustomerDetails(&newOrder);
-
     selectFoodItems(&newOrder);
-
     if(newOrder.itemCount == 0)
     {
         printf("\nNo items selected. Order cancelled.\n");
         return;
     }
-
     do
     {
         displayOrderSummary(&newOrder);
@@ -648,8 +615,6 @@ static void placeOrder(void)
 
     } while(choice != 1 && choice != 3 && newOrder.itemCount > 0);
 }
-
-
 // Function 12: Display Saved Order Details
 static void displaySavedOrderDetails(const Order *savedOrder)
 {
